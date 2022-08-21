@@ -1,7 +1,3 @@
-from asyncio import Task
-import imp
-from urllib import response
-from newapp import serialize
 from newapp.models import Account,DailyTask 
 from newapp.serialize import AccountSerializer, DailyTaskSerializer
 from rest_framework.views import APIView
@@ -10,11 +6,7 @@ from datetime import datetime
 from datetime import datetime, timedelta
 import datetime
 from django.db.models import Sum,Count
-
-from django.db.models.functions import TruncMonth,TruncDate,TruncWeek,TruncDay, ExtractWeekDay , TruncYear
-
-from rest_framework.decorators import api_view,permission_classes
-from rest_framework.permissions import IsAuthenticated ,IsAdminUser
+from rest_framework.decorators import api_view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 import json
@@ -89,6 +81,8 @@ class UserAdd(APIView):
         return Response (200)
        
 
+
+#list tasks done today by employee
 class TodayTask(APIView):
     def get(self, request , id):
         today = datetime.datetime.now().date()
@@ -100,7 +94,8 @@ class TodayTask(APIView):
 
 
 
- 
+
+#Add new task by employee
 class AddTask(APIView):
     def post(self,request ):
         body = request.body.decode('utf-8')
@@ -111,24 +106,22 @@ class AddTask(APIView):
         
         dt =datetime.datetime.strptime(time,"%H:%M")
         requestUser = Account.objects.get(username=user)
-        # total_time = requestUser.Totalhour + timedelta(minutes=5, hours=1)
-
-     
+        
         DailyTask.objects.create(task=task , time=dt ,user=requestUser)
         return Response (200)
 
 
-
+#filter last week tasks
 class WeeklyTask(APIView):
     def get(self,request,id):
+
         one_week_ago = datetime.date.today() - timedelta(days=7)
      
         data = DailyTask.objects.filter(user=id, Date__gte=one_week_ago)
-        print(data)
+
         # current_date_and_time = datetime.datetime.now()
         # print(current_date_and_time,"ffyy")
         # new_time = current_date_and_time + timedelta(minutes=5, hours=1)
-        # print(new_time)
 
         obj = DailyTaskSerializer(data,many=True)
         return Response(obj.data)
@@ -136,7 +129,7 @@ class WeeklyTask(APIView):
     
 
 
-
+#filter task done by monthly base
 class MonthlyTask(APIView):
     def get(self,request,month,userid):
         
@@ -161,7 +154,7 @@ class MonthlyTask(APIView):
     
         
 
-
+#chart
 class DailyChart(APIView):
     def get(self, request,id):
         today = datetime.datetime.now().date()

@@ -1,15 +1,24 @@
 
 from pathlib import Path
+import os
+import environ
+
+
+env = environ.Env()
+# reading .env file
+environ.Env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 from datetime import timedelta
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-argq9c-0#zw&br^4%%s+r-pysuz&28$@_dcegisq4oleu5ktg&'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -34,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 
+SECRET_KEY = env("SECRET_KEY", default="unsafe-secret-key")
 
 
 SIMPLE_JWT = {
