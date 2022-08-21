@@ -1,0 +1,76 @@
+.maindiv{
+    width: 100%;
+    height: 500px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(4, 4, 48);
+}
+.image{
+   padding-left: 7rem;
+}
+.img1{
+    display: flex;
+    justify-content: center;
+}
+.hed{
+    color: aliceblue;
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;
+   
+   
+
+}
+
+
+.boxv{
+
+    width: 21rem;
+    height: 25rem;
+    background-color: rgba(216, 236, 253, 0.082);
+    padding: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+
+}
+.signup{
+    color: white;
+    font-size: 12px;
+    padding-left: 7rem;
+}
+
+.inner{
+    width:100%;
+    height: 40px;
+    margin: 20px;
+   
+
+}
+.input{
+    width:280px;
+    height: 40px;
+    margin-top: 10px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    outline-color: transparent;
+    border-radius: 10px;
+ }
+ .Butn{
+    width:280px;
+    height:40px;
+    margin-top: 35px;
+    background-color: blue;
+    color: white;
+    border-radius: 20px;
+ }
+ .texxt{
+    font-size: 10px;
+    color: rgb(255, 255, 255);
+    padding-left: 90px;
+   
+ }

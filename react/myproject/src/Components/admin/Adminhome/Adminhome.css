@@ -1,0 +1,31 @@
+.row{
+    width:97%;
+    margin-top: 6rem;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.btn3{
+    width: 70px;
+    margin: 1rem;
+}
+
+.btn5{
+    background-color: rgb(5, 114, 238);
+    color: white;
+}
+
+.tablediv{
+    overflow-x: scroll;
+  
+}
+
+.btn7{
+    background-color: rgb(3, 92, 22);
+    color: rgb(255, 255, 255);
+}
+
+
+.logOut{
+    margin-left: 80%;
+}
