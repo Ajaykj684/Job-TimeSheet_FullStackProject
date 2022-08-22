@@ -5,7 +5,7 @@ import AuthContext from "../../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 
 function Header() {
-  let { user, logoutUser } = useContext(AuthContext);
+  let { user} = useContext(AuthContext);
  
   return (
     <div className="Parentdiv">

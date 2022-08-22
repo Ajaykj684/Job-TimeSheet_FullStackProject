@@ -33,14 +33,16 @@ function HomePage() {
 
   const history = useNavigate();
   const [task, setTask] = useState([]);
-  const [slot, setSlot] = useState([]);
-  const [filter, setFilter] = useState([]);
+  const [slot, setSlot] = useState([]);       //select pages
+  const [filter, setFilter] = useState([]);   //select weekly and monthly
 
   const [time, setTime] = useState([]);
   const [today, setToday] = useState([]);
 
-  const [weekly, setWeekly] = useState([]);
-  const [Monthly, setMonthly] = useState([]);
+  const [weekly, setWeekly] = useState([]);     //data of weekly task
+  const [Monthly, setMonthly] = useState([]);   //data of monthly task
+  const [dateFilter, setDateFilter] = useState([]);
+
 
 
   //current date
@@ -90,6 +92,26 @@ function HomePage() {
       })
       .then((res) => setMonthly(res.data), setFilter("Monthly"));
   };
+
+
+
+
+  //filter by 2 dates
+
+  const DateFilter=(e)=>{
+    e.preventDefault()
+    const fromdate = e.target.fromDate.value
+    const todate = e.target.toDate.value
+
+    if( fromdate.length > 1 && todate.length > 0 ){
+   
+    axios
+      .post(`http://127.0.0.1:8000/DateFilter/${user.user_id}`,{
+        "fromDate" : fromdate , "toDate" : todate
+      })
+      .then((res) => setDateFilter(res.data), setFilter("datefilter"));
+  }}
+
 
 
   //page selection
@@ -227,7 +249,7 @@ function HomePage() {
                             >
                               {user ? (
                                 <button
-                                  className='class="bg-transparent hover:bg-red-600 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"'
+                                  className='bg-transparent hover:bg-red-600 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'
                                   onClick={logoutUser}
                                 >
                                   Logout
@@ -337,10 +359,10 @@ function HomePage() {
                   newTask();
                 }}
                 type="submit"
-                class="mt-4 pb-3 pt-2 hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-flex items-center"
+                className="mt-4 pb-3 pt-2 hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded inline-flex items-center"
               >
                 <svg
-                  class="fill-current w-4 h-4 mr-2"
+                  className="fill-current w-4 h-4 mr-2"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                 >
@@ -380,6 +402,8 @@ function HomePage() {
       {/* task page ends here  */}
 
 
+
+
  {/* History page start here */}
 
       {slot == "HistoryPage" && (
@@ -388,22 +412,14 @@ function HomePage() {
             <h1 className="mt-5 text-xl font-bold pl-5">History Of Tasks</h1>
             <div id="myBtnContainer " className="mt-4 mx-5 flex">
               <div>
-                <button
-                  className="btn "
-                  onClick={() => {
-                    weeklyTask();
-                  }}
-                >
+                <button className="btn " onClick={() => { weeklyTask();}}>
                   {" "}
                   Weekly
                 </button>
               </div>
 
               <div>
-                <select
-                  className="mt-2 mx-4"
-                  id="selectBox"
-                  onChange={(e) => {
+                <select className="mt-2 mx-4" id="selectBox" onChange={(e) => {
                     MonthlyTask(e.target.value);
                   }}
                 >
@@ -424,8 +440,23 @@ function HomePage() {
                 </select>
               </div>
             </div>
-          </div>
 
+          {/* datefilter  - filter by date */}
+          
+            <div className="mt-4">
+            
+            <form onSubmit={(e)=>{DateFilter(e)}}>
+              From :<input type='date' className="mx-3" name="fromDate"/>
+              To :<input type='date' className="mx-3" name="toDate"/>
+              <button  type="submit" className="mx-3  hover:bg-red-600 text-red-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Submit</button>
+            </form>
+            </div>
+          
+          {/* end of filter by date */}
+            
+            </div>
+
+           
 
           {/* monthly filtering start here */}
 
@@ -486,6 +517,44 @@ function HomePage() {
           </div>
         </>
       )}
+
+    {/* weekly filter end here */}
+
+
+
+      {/* date filter start here */}
+
+      {filter == "datefilter" && (
+              <>
+                <div className="tablediv">
+                  <h1 className=" mt-4 text-xl">Task History of entered period</h1>
+                  <table className="table table-bordered mt-5">
+                    <thead>
+                      <tr>
+                        <th scope="col">Task</th>
+                        <th scope="col">Time Taken</th>
+                        <th scope="col">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dateFilter.map((value) => (
+                        <tr>
+                          <th scope="row">{value.task}</th>
+                          <th scope="row">{value.time}</th>
+                          <th scope="row">{value.Date}</th>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+          
+          {/* date filter end here */}
+
+
+      
     </>
   );
 }

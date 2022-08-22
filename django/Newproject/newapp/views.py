@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from datetime import datetime
 from datetime import datetime, timedelta
 import datetime
+from django.db.models.functions import TruncDate
+
 from django.db.models import Sum,Count
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -86,7 +88,7 @@ class UserAdd(APIView):
 class TodayTask(APIView):
     def get(self, request , id):
         today = datetime.datetime.now().date()
-        tasks =  DailyTask.objects.filter(Date  = today , user = id ) 
+        tasks =  DailyTask.objects.filter(Date  = today , user = id ).order_by('-id')
         obj = DailyTaskSerializer(tasks,many=True)
         return Response(obj.data)
 
@@ -117,7 +119,7 @@ class WeeklyTask(APIView):
 
         one_week_ago = datetime.date.today() - timedelta(days=7)
      
-        data = DailyTask.objects.filter(user=id, Date__gte=one_week_ago)
+        data = DailyTask.objects.filter(user=id, Date__gte=one_week_ago).order_by('-id')
 
         # current_date_and_time = datetime.datetime.now()
         # print(current_date_and_time,"ffyy")
@@ -147,7 +149,7 @@ class MonthlyTask(APIView):
 
         todt = [ 2022 , month , day ]
 
-        data = DailyTask.objects.filter(user = userid , Date__gte=datetime.date(fm[0],fm[1],fm[2]), Date__lte=datetime.date(todt[0],todt[1],todt[2]))
+        data = DailyTask.objects.filter(user = userid , Date__gte=datetime.date(fm[0],fm[1],fm[2]), Date__lte=datetime.date(todt[0],todt[1],todt[2])).order_by('-id')
      
         obj = DailyTaskSerializer(data,many=True)
         return Response(obj.data)
@@ -162,3 +164,27 @@ class DailyChart(APIView):
         obj = DailyTaskSerializer(tasks,many=True)
         return Response(obj.data)
         
+
+
+class DateFilter(APIView):
+    def post(self, request,id):
+      
+        body = request.body.decode('utf-8')
+        body = json.loads(body)
+
+        fromDate = body['fromDate']
+        toDate = body['toDate']
+
+        frm = fromDate.split("-")
+        tod = toDate.split("-")
+
+        fm = [int(x) for x in frm]
+        todt = [int(x) for x in tod]
+        print( fm , todt)
+                
+        data = DailyTask.objects.filter(user = id , Date__gte=datetime.date(fm[0],fm[1],fm[2]), Date__lte=datetime.date(todt[0],todt[1],todt[2])).order_by('-id')
+        obj = DailyTaskSerializer(data,many=True)
+        return Response(obj.data)
+
+
+

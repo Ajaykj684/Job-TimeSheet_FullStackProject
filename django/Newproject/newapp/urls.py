@@ -20,6 +20,9 @@ urlpatterns = [
 
     path('weeklyTask/<int:id>',views.WeeklyTask.as_view()),
     path('monthlyTask/<int:month>/<int:userid>',views.MonthlyTask.as_view()),
+    path('DateFilter/<int:id>',views.DateFilter.as_view()),
+
+
 
     #admin
     path('delete/<int:id>',views.UserDelete.as_view()),

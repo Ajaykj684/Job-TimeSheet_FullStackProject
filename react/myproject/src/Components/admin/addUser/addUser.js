@@ -48,12 +48,7 @@ export default function Signup() {
 
   const formdata = (e) => {
     e.preventDefault();
-    if (
-      email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) &&
-      username.length > 1 &&
-      password.length > 3 &&
-      phone.length > 3
-    ) {
+    if (  email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) &&  username.length > 1 && password.length > 3 && phone.length > 3) {
       Axios({
         method: "post",
         url: "http://127.0.0.1:8000/add/",
@@ -67,6 +62,7 @@ export default function Signup() {
           "content-type": "application/json",
         },
       }).then((response) => {
+
         if (response.status === 200) {
           history("/admin");
         } else {
