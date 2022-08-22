@@ -119,7 +119,7 @@ class WeeklyTask(APIView):
 
         one_week_ago = datetime.date.today() - timedelta(days=7)
      
-        data = DailyTask.objects.filter(user=id, Date__gte=one_week_ago).order_by('-id')
+        data = DailyTask.objects.filter(user=id, Date__gte=one_week_ago).annotate(count=Count('task')).order_by('-id')
 
         # current_date_and_time = datetime.datetime.now()
         # print(current_date_and_time,"ffyy")

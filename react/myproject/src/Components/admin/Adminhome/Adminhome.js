@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
+import { LineChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import Axios from "axios";
 import "./Adminhome.css";
@@ -30,6 +30,9 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
+import { Line } from 'react-chartjs-2'
+import Chart from 'chart.js/auto';
+ 
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -93,7 +96,7 @@ function Adminhome() {
   };
 
 
-  const [data, setData] = useState([]);
+  const [datas, setDatas] = useState([]);
   const [state, setState] = useState(false);
   const [slot, setSlot] = useState([]);
   const [chart, setChart] = useState([]);
@@ -102,7 +105,7 @@ function Adminhome() {
   let { user, logoutAdmin } = useContext(AuthContext);
 
   useEffect(() => {
-    Axios.get("http://127.0.0.1:8000/").then((res) => setData(res.data));
+    Axios.get("http://127.0.0.1:8000/").then((res) => setDatas(res.data));
     setSlot("Dashboard");
   }, [state]);
 
@@ -123,10 +126,10 @@ function Adminhome() {
           onClick: () =>
             Axios.post(`http://127.0.0.1:8000/delete/${id}`)
               .then(() => {
-                const newData = data.filter((value) => {
+                const newData = datas.filter((value) => {
                   return value.id !== id;
                 });
-                setData(newData);
+                setDatas(newData);
               })
               .catch(() => {
                 alert("Something went wrong");
@@ -161,6 +164,23 @@ function Adminhome() {
       .get(`http://127.0.0.1:8000/dailyChart/${id}`)
       .then((res) => setChart(res.data), setSlot("chartPage"));
   };
+
+ const labelValue=[chart.map((value)=>(value.task))]
+
+
+  const data = {
+           labels:labelValue
+      
+    ,
+    datasets:[
+    {
+    label:'Chart',
+    data:[chart.map((value)=>(parseInt(value.time)))]
+   
+  }
+    ]
+  }
+  console.log(data,"lll")
 
 
 
@@ -252,7 +272,7 @@ function Adminhome() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((value) => (
+                    {datas.map((value) => (
                       <tr>
                         <th scope="row">{value.username}</th>
                         <th scope="row">{value.email}</th>
@@ -301,7 +321,7 @@ function Adminhome() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((value) => (
+                  {datas.map((value) => (
                     <tr>
                       <th scope="row">{value.username}</th>
                       <th scope="row">{value.email}</th>
@@ -331,7 +351,8 @@ function Adminhome() {
         {/* chart page */}
 
         {slot == "chartPage" && (
-          <LineChart
+          <>
+         <LineChart
             width={600}
             height={300}
             data={chart}
@@ -342,6 +363,14 @@ function Adminhome() {
             <XAxis dataKey="task" />
             <YAxis />
           </LineChart>
+
+
+
+
+          <div className="chart">
+          <Line data = {data} />
+          </div>
+          </>
         )}
 
         {/* chartpage end here */}
